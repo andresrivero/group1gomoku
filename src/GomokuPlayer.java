@@ -20,6 +20,7 @@ public class GomokuPlayer {
         
 		try {
 	    
+			
             socket = new Socket(host, port);
             System.out.println("Opened port");
             output = new PrintWriter(socket.getOutputStream(), true); 
