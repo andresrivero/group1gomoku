@@ -13,7 +13,9 @@ public class GomokuPlayer {
     public static final int DEFAULTPORT = 17033;    
     
 	public GomokuPlayer(String host, int port) {
+		
 			openSocket(host, port);
+			
 	}
 	
 	public void openSocket(String host, int port) {
@@ -25,17 +27,8 @@ public class GomokuPlayer {
             System.out.println("Opened port");
             output = new PrintWriter(socket.getOutputStream(), true); 
             System.out.println("setup port output");
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            setup = null;
-            System.out.print(input.readLine() + "\n");
-            
-            for (int x = 0; x < 11; x ++ ) {
+			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                System.out.print(x + ":" + input.readLine() + "\n");
-            }
-
-            System.out.print(input.readLine() + "\n");
-            System.out.println("Setup port input buffered reader ");
             
         } catch (UnknownHostException e) {
             System.err.println("Can't connect to host: " + host);
@@ -55,28 +48,46 @@ public class GomokuPlayer {
           }
 		System.out.println("Got board");
 		return board;
+		
 	}
 	
 	public void sendMove(String move) throws Exception {
 		
-			output.println(move + "\n");
+			output.println(move);
 	}
 	
 	public void play () {
 		
 	}
+	public void assess() {
+		
+	}
+	public void think() {
+		
+	}
 	public static void main(String[] args) {
-
+		boolean start = false;
 		GomokuPlayer ai = new GomokuPlayer("localhost", DEFAULTPORT);
 		List<String> board = null;
 		Scanner scan = new Scanner(System.in);
-		
 		while (true) {
 			try {
-				board = ai.getBoard();
+				
+	            System.out.print("Game state: " + ai.input.readLine() + "\n");
+	            
+	            for (int x = 0; x < 11; x ++ ) {
+
+	                System.out.print(x + ":" + ai.input.readLine() + "\n");
+	            }
+
+	            System.out.print("My piece: " + ai.input.readLine() + "\n");
+	            System.out.println("Setup port input buffered reader ");
 				System.out.println("Enter move: ");
+
 				ai.sendMove(scan.nextLine());
 				System.out.println("--------------");
+				
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
