@@ -11,6 +11,8 @@ public class GomokuPlayer {
     protected PrintWriter output;            
     protected BufferedReader input;
     protected Board board;
+    protected Board scores;
+    
     private Random rand;
     
     public static final int DEFAULTPORT = 17033;    
@@ -18,6 +20,7 @@ public class GomokuPlayer {
 	public GomokuPlayer(String host, int port) {
 			this.rand = new Random(System.currentTimeMillis());
 			openSocket(host, port);
+			board = this.new Board(0,0);
 			board = this.new Board(0,0);
 	}
 	
@@ -180,24 +183,59 @@ public class GomokuPlayer {
 		            
 		            line = gp.input.readLine();
 		            length = line.length();
+		            
 		            gp.board = gp.new Board(length, length);
+		            gp.scores = gp.new Board(length, length);
+		            
 		            gp.board.add(line.toCharArray(), 0);
 		            for (int x = 0; x < length-1; x++) {
 		            	line = gp.input.readLine();
 		            	gp.board.add(line.toCharArray(), x+1);
 		            }
+		            
+		            for (int x = 0; x < length; x++) {
+		            	gp.scores.add(gp.board.get(x), x);
+		            }
+		            
 		            System.out.println("Blank board");
 		            self = gp.input.readLine();
 		            if (!self.matches("o|x")){
 		            	System.out.println("Invalid string!");
 		            	return;
 		            }
+		            
+		            System.out.println("Score board");
+		            for (int x = 0; x < length; x++){
+		            	if (x < 10) System.out.print(x + "  ");
+		            	else System.out.print(x + " ");
+		            	if (x == length-1) {
+		            		System.out.println();
+		            		
+		            	}
+		            }
+
+		            for (int x = 0; x < length; x++){
+		            	if (x < 10) {
+		            		System.out.print(x + " ");
+		            	} else {
+		            		System.out.print(x);
+		            	}
+		            	for (String value : gp.scores.gets(x).split("")){
+		            		if (value.equals("")){
+		            			System.out.print("[ ]");
+		               		} else {
+		               			System.out.print("["+value+"]");
+		               		}
+		            	}
+		            	System.out.println();
+		            }
+		            
 		            System.out.print("My piece: " + self + "\n");
 		            System.out.println("Setup port input buffered reader ");
 					System.out.println("Enter move: ");
 
-					gp.sendMove(gp.random());
-					//gp.sendMove(scan.nextLine());
+					//gp.sendMove(gp.random());
+					gp.sendMove(scan.nextLine());
 					
 					System.out.println("--------------");
 					
@@ -222,6 +260,11 @@ public class GomokuPlayer {
 		            }
 		           
 		            gp.board = gp.getBoard(length);
+		            gp.scores = gp.new Board(length, length);
+
+		            for (int x = 0; x < length; x++) {
+		            	gp.scores.add(gp.board.get(x), x);
+		            }
 		            System.out.print("   ");
 		            for (int x = 0; x < length; x++){
 		            	if (x < 10) System.out.print(x + "  ");
@@ -247,6 +290,34 @@ public class GomokuPlayer {
 		            	}
 		            	System.out.println();
 		            }
+		            
+		            System.out.println("Score board");
+		            for (int x = 0; x < length; x++){
+		            	if (x < 10) System.out.print(x + "  ");
+		            	else System.out.print(x + " ");
+		            	if (x == length-1) {
+		            		System.out.println();
+		            		
+		            	}
+		            }
+
+		            for (int x = 0; x < length; x++){
+		            	if (x < 10) {
+		            		System.out.print(x + " ");
+		            	} else {
+		            		System.out.print(x);
+		            	}
+		            	for (String value : gp.scores.gets(x).split("")){
+		            		if (value.equals("")){
+		            			System.out.print("[ ]");
+		               		} else {
+		               			System.out.print("["+value+"]");
+		               		}
+		            	}
+		            	System.out.println();
+		            }
+		            
+		            
 		            self = gp.input.readLine();
 				    if (!self.matches("o|x")){
 				         System.out.println("Invalid string!");
@@ -256,8 +327,8 @@ public class GomokuPlayer {
 				    
 					System.out.println("Enter move: ");
 
-					gp.sendMove(gp.random());
-					//gp.sendMove(scan.nextLine());
+					//gp.sendMove(gp.random());
+					gp.sendMove(scan.nextLine());
 					System.out.println("--------------");
 					
 					
