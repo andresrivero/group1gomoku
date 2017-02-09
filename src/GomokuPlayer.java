@@ -12,7 +12,8 @@ public class GomokuPlayer {
     protected BufferedReader input;
     protected Board board;
     protected Board scores;
-    
+    protected String self;
+    protected int[][] scored;
     private Random rand;
     
     public static final int DEFAULTPORT = 17033;    
@@ -22,6 +23,9 @@ public class GomokuPlayer {
 			openSocket(host, port);
 			board = this.new Board(0,0);
 			board = this.new Board(0,0);
+			self = new String();
+			
+			
 	}
 	
 	public void openSocket(String host, int port) {
@@ -153,18 +157,283 @@ public class GomokuPlayer {
 		}
 	}
 	
-	
+	public void scoreParse (Board board, char mine) {
+		char enemy = 'x';
+		if (mine == 'o') {
+			
+		} else {
+			enemy = 'o';
+		}
+		this.scored = new int[board.height()][board.length()];
+		for (int x = 0; x< board.height(); x++){
+			for (int y = 0; y < board.length(); y++) {
+				this.scored[x][y] = 0;
+			}
+		}
+		//char gp.scored = new Board(board.height(), board.length());
+		for (int row = 0; row< board.height()-1; row++) {
+			for (int col = 0; col < board.length()-1; col++) {
+				if (board.gets(row, col).matches("o|x")) {
+					if (board.gets(row, col).matches("o")) scored[row][col] = -1000;
+					else scored[row][col] = 1000;
+				} else {
+					if (row == 0) {
+						
+						if (col == 0) {
+							if (board.g[0][1] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[0][1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[1][1] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[1][1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[1][0] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[1][0] == enemy) {
+								scored[row][col]--;
+							}
+							
+							
+						} else if (col == board.length()) {
+							if (board.g[0][board.length()-1] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[0][board.length()-1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[1][board.length()-1] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[1][board.length()-1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[1][board.length()] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[1][board.length()] == enemy) {
+								scored[row][col]--;
+							}
+							
+						} else {
+							//if (col < board.length()-1) {
+								if (board.g[row][col-1] == mine) {
+									scored[row][col]++;
+								} else if (board.g[row][col-1] == enemy) {
+									scored[row][col]--;
+								}
+								if (board.g[row+1][col-1] == mine) {
+									scored[row][col]++;
+								} else if (board.g[row+1][col-1] == enemy) {
+									scored[row][col]--;
+								}
+								if (board.g[row+1][col] == mine) {
+									scored[row][col]++;
+								} else if (board.g[row+1][col] == enemy) {
+									scored[row][col]--;
+								}
+
+								if (board.g[row+1][col+1] == mine) {
+									scored[row][col]++;
+								} else if (board.g[row+1][col+1] == enemy) {
+									scored[row][col]--;
+								}
+								if (board.g[row][col+1] == mine) {
+									scored[row][col]++;
+								} else if (board.g[row][col+1] == enemy) {
+									scored[row][col]--;
+								}
+								
+							//}
+							
+						}
+						
+					} else if (row == board.height()) {
+						if (col == 0) {
+							if (board.g[board.height()-1][0] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[board.height()-1][0] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[board.height()-1][1] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[board.height()-1][1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[board.height()][1] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[board.height()][1] == enemy) {
+								scored[row][col]--;
+							}
+							
+						} else if (col == board.length()) {
+							if (board.g[board.height()][board.length()-1] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[board.height()][board.length()-1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[board.height()-1][board.length()-1] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[board.height()-1][board.length()-1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[board.height()-1][board.length()] == mine)  {
+								scored[row][col]++;
+							} else if (board.g[board.height()-1][board.length()] == enemy) {
+								scored[row][col]--;
+							}
+							
+							
+						} else {
+							//
+
+							if (board.g[row][col-1] == mine) {
+								scored[row][col]++;
+							} else if (board.g[row][col-1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[row-1][col-1] == mine) {
+								scored[row][col]++;
+							} else if (board.g[row-1][col-1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[row-1][col] == mine) {
+								scored[row][col]++;
+							} else if (board.g[row-1][col] == enemy) {
+								scored[row][col]--;
+							}
+
+							if (board.g[row-1][col+1] == mine) {
+								scored[row][col]++;
+							} else if (board.g[row-1][col+1] == enemy) {
+								scored[row][col]--;
+							}
+							if (board.g[row][col+1] == mine) {
+								scored[row][col]++;
+							} else if (board.g[row][col+1] == enemy) {
+								scored[row][col]--;
+							}
+						}
+					} else if (col == 0 && (row > 0 || row < board.height())) {
+						//sides
+						if (board.g[row-1][col] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row-1][col] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row-1][col+1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row-1][col+1] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row][col+1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row][col+1] == enemy) {
+							scored[row][col]--;
+						}
+
+						if (board.g[row+1][col+1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row+1][col+1] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row+1][col] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row+1][col] == enemy) {
+							scored[row][col]--;
+						}
+					} else if (col == board.length() && (row > 0 || row < board.height())){
+						if (board.g[row-1][col] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row-1][col] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row-1][col-1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row-1][col-1] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row][col-1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row][col-1] == enemy) {
+							scored[row][col]--;
+						}
+
+						if (board.g[row+1][col-1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row+1][col-1] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row][col+1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row][col+1] == enemy) {
+							scored[row][col]--;
+						}
+					} else {
+						
+						//inner
+						
+						if (board.g[row-1][col-1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row-1][col-1] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row-1][col] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row-1][col] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row-1][col+1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row-1][col+1] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row][col+1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row][col+1] == enemy) {
+							scored[row][col]--;
+						}
+
+						if (board.g[row+1][col+1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row+1][col+1] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row+1][col] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row+1][col] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row+1][col-1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row+1][col-1] == enemy) {
+							scored[row][col]--;
+						}
+						if (board.g[row][col-1] == mine) {
+							scored[row][col]++;
+						} else if (board.g[row][col-1] == enemy) {
+							scored[row][col]--;
+						}
+						
+					}
+					
+				}
+			}
+		}
+		
+	}
 	public static void main(String[] args) {
 		
 		GomokuPlayer gp = new GomokuPlayer("localhost", DEFAULTPORT);
-
+		gp.self = null;
 		boolean start = true;
 		String state = null;
 		String line = null;
 		int length = 0;
-		String self = null;
+		
 		Scanner scan = new Scanner(System.in);
 
+        gp.scores = gp.new Board(length, length);
+        
 		while (true) {
 			if (start) {
 				try {
@@ -185,7 +454,6 @@ public class GomokuPlayer {
 		            length = line.length();
 		            
 		            gp.board = gp.new Board(length, length);
-		            gp.scores = gp.new Board(length, length);
 		            
 		            gp.board.add(line.toCharArray(), 0);
 		            for (int x = 0; x < length-1; x++) {
@@ -193,17 +461,22 @@ public class GomokuPlayer {
 		            	gp.board.add(line.toCharArray(), x+1);
 		            }
 		            
-		            for (int x = 0; x < length; x++) {
-		            	gp.scores.add(gp.board.get(x), x);
-		            }
+		           
 		            
 		            System.out.println("Blank board");
-		            self = gp.input.readLine();
-		            if (!self.matches("o|x")){
+		            gp.self = gp.input.readLine();
+		            if (!gp.self.matches("o|x")){
 		            	System.out.println("Invalid string!");
 		            	return;
 		            }
 		            
+		           
+		            gp.scoreParse(gp.board, gp.self.charAt(0));
+		            
+//		            for (int x = 0; x < length; x++) {
+//		            	gp.scores.add(gp.board.get(x), x);
+//		            }
+//		            
 		            System.out.println("Score board");
 		            for (int x = 0; x < length; x++){
 		            	if (x < 10) System.out.print(x + "  ");
@@ -213,24 +486,32 @@ public class GomokuPlayer {
 		            		
 		            	}
 		            }
-
-		            for (int x = 0; x < length; x++){
+		            for (int x = 0; x < length; x++) {
 		            	if (x < 10) {
 		            		System.out.print(x + " ");
 		            	} else {
 		            		System.out.print(x);
 		            	}
-		            	for (String value : gp.scores.gets(x).split("")){
-		            		if (value.equals("")){
-		            			System.out.print("[ ]");
-		               		} else {
-		               			System.out.print("["+value+"]");
-		               		}
+		            	for (int y = 0; y< length; y++) {
+		            		System.out.println("["+gp.scored[x][y]+"]");
 		            	}
+
 		            	System.out.println();
 		            }
+		            	
+//		            for (int x = 0; x < length; x++){
+//		            	
+//		            	for (String value : gp.scores.gets(x).split("")){
+//		            		if (value.equals("")){
+//		            			System.out.print("[ ]");
+//		               		} else {
+//		               			System.out.print("["+value+"]");
+//		               		}
+//		            	}
+//		            	System.out.println();
+//		            }
 		            
-		            System.out.print("My piece: " + self + "\n");
+		            System.out.print("My piece: " + gp.self + "\n");
 		            System.out.println("Setup port input buffered reader ");
 					System.out.println("Enter move: ");
 
@@ -260,11 +541,11 @@ public class GomokuPlayer {
 		            }
 		           
 		            gp.board = gp.getBoard(length);
-		            gp.scores = gp.new Board(length, length);
+		            //gp.scores = gp.new Board(length, length);
 
-		            for (int x = 0; x < length; x++) {
-		            	gp.scores.add(gp.board.get(x), x);
-		            }
+//		            for (int x = 0; x < length; x++) {
+//		            	gp.scores.add(gp.board.get(x), x);
+//		            }
 		            System.out.print("   ");
 		            for (int x = 0; x < length; x++){
 		            	if (x < 10) System.out.print(x + "  ");
@@ -291,39 +572,83 @@ public class GomokuPlayer {
 		            	System.out.println();
 		            }
 		            
+//		            System.out.println("Score board");
+//		            for (int x = 0; x < length; x++){
+//		            	if (x < 10) System.out.print(x + "  ");
+//		            	else System.out.print(x + " ");
+//		            	if (x == length-1) {
+//		            		System.out.println();
+//		            		
+//		            	}
+//		            }
+//
+//		            for (int x = 0; x < length; x++){
+//		            	if (x < 10) {
+//		            		System.out.print(x + " ");
+//		            	} else {
+//		            		System.out.print(x);
+//		            	}
+//		            	for (String value : gp.scores.gets(x).split("")){
+//		            		if (value.equals("")){
+//		            			System.out.print("[ ]");
+//		               		} else {
+//		               			System.out.print("["+value+"]");
+//		               		}
+//		            	}
+//		            	System.out.println();
+//		            }
+		            gp.scoreParse(gp.board, gp.self.charAt(0));
+		            
+//		            for (int x = 0; x < length; x++) {
+//		            	gp.scores.add(gp.board.get(x), x);
+//		            }
+//		            
 		            System.out.println("Score board");
 		            for (int x = 0; x < length; x++){
 		            	if (x < 10) System.out.print(x + "  ");
-		            	else System.out.print(x + " ");
+		            	else System.out.print(x + "  ");
 		            	if (x == length-1) {
 		            		System.out.println();
 		            		
 		            	}
 		            }
-
-		            for (int x = 0; x < length; x++){
+		            for (int x = 0; x < length; x++) {
 		            	if (x < 10) {
 		            		System.out.print(x + " ");
-		            	} else {
+		            	} else {	
 		            		System.out.print(x);
 		            	}
-		            	for (String value : gp.scores.gets(x).split("")){
-		            		if (value.equals("")){
-		            			System.out.print("[ ]");
-		               		} else {
-		               			System.out.print("["+value+"]");
-		               		}
+		            	for (int y = 0; y< length; y++) {
+		            		if (gp.scored[x][y] == -1000 || gp.scored[x][y] == 1000) {
+			            		System.out.print("[ "+gp.board.g[x][y] + " ]");
+
+		            		} else {
+		            			if (gp.scored[x][y] <= -10 || gp.scored[x][y] >= 100) {
+				            		System.out.print("["+gp.scored[x][y]+"]");
+
+		            			} else if (gp.scored[x][y] == 0) {
+				            		System.out.print("[  0]");
+
+		            			}else if (gp.scored[x][y] < 0) {
+				            		System.out.print("[ "+gp.scored[x][y]+"]");
+
+		            			}else if (gp.scored[x][y] > 0) {
+				            		System.out.print("[  "+gp.scored[x][y]+"]");
+
+		            			}
+
+		            		}
 		            	}
+
 		            	System.out.println();
 		            }
 		            
-		            
-		            self = gp.input.readLine();
-				    if (!self.matches("o|x")){
+		            gp.self = gp.input.readLine();
+				    if (!gp.self.matches("o|x")){
 				         System.out.println("Invalid string!");
 				         return;
 				    }
-				    System.out.print("My piece: " + self + "\n");
+				    System.out.print("My piece: " + gp.self + "\n");
 				    
 					System.out.println("Enter move: ");
 
