@@ -77,6 +77,8 @@ public class GomokuPlayer {
 		
 	}
 	
+	
+	
 	public String random() {
 		int cols = this.board.cols;
 		int rows = this.board.rows;
@@ -541,11 +543,7 @@ public class GomokuPlayer {
 		            }
 		           
 		            gp.board = gp.getBoard(length);
-		            //gp.scores = gp.new Board(length, length);
 
-//		            for (int x = 0; x < length; x++) {
-//		            	gp.scores.add(gp.board.get(x), x);
-//		            }
 		            System.out.print("   ");
 		            for (int x = 0; x < length; x++){
 		            	if (x < 10) System.out.print(x + "  ");
