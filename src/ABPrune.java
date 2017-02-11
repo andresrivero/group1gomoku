@@ -29,7 +29,13 @@ public class ABPrune {
 			this.beta = beta;
 			
 		}
-		
+		public int getAlpha() {
+			return this.alpha;
+		}
+		public int getBeta() {
+			return this.beta;
+			
+		}
 		public Point Max() {
 			
 			
@@ -158,7 +164,12 @@ public class ABPrune {
 		System.out.println(tmp.getLevel());
 		tmp = (ABNode) tmp.getFirstChild();
 		System.out.println(tmp.getLevel());
-
+		Enumeration depth = root.breadthFirstEnumeration();
+		ABNode enumed;
+		while(depth.hasMoreElements()) {
+			enumed = (ABNode)depth.nextElement();
+			System.out.println(enumed.type);
+		}
 		
 		
 		
