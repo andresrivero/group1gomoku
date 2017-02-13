@@ -191,9 +191,9 @@ public class ABPrune {
 	public ABPrune() {
 		
 		ArrayList<Point> array = new ArrayList<Point>();
-		
-		for (int x = 1; x < 10; x++) {
-			array.add(new Point(x,x,x));
+		int[] arrayi = {-16,-19,20,-19,-3,19,-4,-19,-15};
+		for (int x = 0; x < 9; x++) {
+			array.add(new Point(arrayi[x],arrayi[x], arrayi[x]));
 		}
 		
 		ABNode root = new ABNode("root", null, true);
