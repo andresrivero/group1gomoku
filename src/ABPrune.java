@@ -19,39 +19,48 @@ public class ABPrune {
 	}
 	
 	class ABNode extends DefaultMutableTreeNode {
-		protected int alpha;
-		protected int beta;
-		protected String type;
-		public ABNode(String type, int alpha, int beta, Object userObject, boolean allowsChildren) {
+		
+		
+		private String type;
+
+		public ABNode(String type, Object userObject, boolean allowsChildren) {
 			super(userObject, allowsChildren);
 			this.type = type;
-			this.alpha = alpha;
-			this.beta = beta;
-			
-		}
-		public int getAlpha() {
-			return this.alpha;
-		}
-		public int getBeta() {
-			return this.beta;
-			
-		}
-		public Point Max() {
-			
-			
-			return null;
-			
+
 		}
 		
-		public Point Min() {
+		@Override
+		public Point getUserObject() {
 			
-			return null;
+			return (Point)super.userObject;
+			
 		}
+		@Override
+		public ABNode getChildAt(int childIndex) {
+			return (ABNode) super.getChildAt(childIndex);
+		}
+//		
+//		public Point Max(int alpha, int beta) {
+//			this.alpha = alpha;
+//			this.beta = beta;
+//			Point temp = new Point(alpha,0,0);
+//			this.userObject = temp;
+//			for (int x = 0; x < this.getChildCount(); x++) {
+//				temp = this.Min(temp.value, this.beta);
+//				
+//				
+//			}
+//			
+//			return null;
+//			
+////		}
+////		
+//		public Point Min(int alpha, int beta) {
+//			
+//			return null;
+//		}
+//		
 		
-		public Point Prune() {
-			
-			return null;
-		}
 
 //		@Override
 //		public TreeNode getChildAt(int childIndex) {
@@ -130,46 +139,113 @@ public class ABPrune {
 //			// TODO Auto-generated method stub
 //			
 //		}
+		
 	}
 	
+	public Point Prune(ABNode down, Point alpha, Point beta, boolean minOrMax) {
+		
+		Point abPoint = new Point(0,0,0);
+
+		if (down.isLeaf()) {
+			abPoint = down.getUserObject();
+		}
+		
+		else if (minOrMax) {
+			
+			abPoint = alpha;
+			int q = 0;
+			int childrenleft = down.getChildCount();
+			while (q < childrenleft) {
+				
+				
+				System.out.println(q);
+				Point kidPoint = Prune(down.getChildAt(q), abPoint, beta, false);
+				abPoint = abPoint.value > kidPoint.value ? abPoint: kidPoint;
+				
+				q++;
+				if (beta.value <= abPoint.value) break;
+				
+			}
+		} else {
+			int q = 0;
+
+			abPoint = beta;
+			int childrenleft = down.getChildCount();
+			while (q < childrenleft) {
+				
+				System.out.println(q);
+
+				Point kidPoint = Prune(down.getChildAt(q), alpha, abPoint, true);
+				
+				abPoint = abPoint.value < kidPoint.value ? abPoint: kidPoint;
+				
+				q++;
+				
+				if (abPoint.value <= alpha.value) break;
+				
+			}
+
+		}
+		return abPoint;
+	}
 	public ABPrune() {
 		
 		ArrayList<Point> array = new ArrayList<Point>();
+		
 		for (int x = 1; x < 10; x++) {
 			array.add(new Point(x,x,x));
 		}
-		ABNode root = new ABNode("root", Integer.MIN_VALUE, Integer.MAX_VALUE, null, true);
 		
-
-				
-		root.add(new ABNode("min", 0, 0, null, true));
-		root.add(new ABNode("min", 0, 0, null, true));
-		root.add(new ABNode("min", 0, 0, null, true));
+		ABNode root = new ABNode("root", null, true);
+		
+		root.add(new ABNode("min", null, true));
+		root.add(new ABNode("min", null, true));
+		root.add(new ABNode("min", null, true));
 
 		ABNode tmp = root;
 		Enumeration children = tmp.children();
 		System.out.println(root.getChildCount());
 		
-		while (children.hasMoreElements()) {
-			tmp = (ABNode) children.nextElement();
-			
-			tmp.add(new ABNode("leaf", 0, 0, new Point(array.listIterator().next().value, 0, 0), false));
-			tmp.add(new ABNode("leaf", 0, 0, new Point(array.listIterator().next().value, 0, 0), false));
-			tmp.add(new ABNode("leaf", 0, 0, new Point(array.listIterator().next().value, 0, 0), false));
+		ABNode tmp2 = (ABNode)children.nextElement();
 
-		}
-		 System.out.println( tmp.getChildCount());
-		
-		System.out.println(tmp.getUserObject());
-		System.out.println(tmp.getLevel());
-		tmp = (ABNode) tmp.getFirstChild();
-		System.out.println(tmp.getLevel());
-		Enumeration depth = root.breadthFirstEnumeration();
-		ABNode enumed;
-		while(depth.hasMoreElements()) {
-			enumed = (ABNode)depth.nextElement();
-			System.out.println(enumed.type);
-		}
+		System.out.println(tmp2.hashCode());
+		tmp2.add(new ABNode("leaf",  new Point(array.get(0).value, array.get(0).value, array.get(0).value), false));
+		tmp2.add(new ABNode("leaf",  new Point(array.get(1).value, array.get(1).value, array.get(1).value), false));
+		tmp2.add(new ABNode("leaf",  new Point(array.get(2).value, array.get(2).value, array.get(2).value), false));
+
+		tmp2 = (ABNode) children.nextElement();
+
+				System.out.println(tmp2.hashCode());
+			tmp2.add(new ABNode("leaf",  new Point(array.get(3).value, array.get(3).value, array.get(3).value), false));
+			tmp2.add(new ABNode("leaf",  new Point(array.get(4).value, array.get(4).value, array.get(4).value), false));
+			tmp2.add(new ABNode("leaf",  new Point(array.get(5).value, array.get(5).value, array.get(5).value), false));
+
+			 tmp2 = (ABNode) children.nextElement();
+
+				System.out.println(tmp2.hashCode());
+			tmp2.add(new ABNode("leaf",  new Point(array.get(6).value, array.get(6).value, array.get(6).value), false));
+			tmp2.add(new ABNode("leaf",  new Point(array.get(7).value, array.get(7).value, array.get(7).value), false));
+			tmp2.add(new ABNode("leaf",  new Point(array.get(8).value, array.get(8).value, array.get(8).value), false));
+
+//		System.out.println( tmp.getChildCount());
+//		
+//		System.out.println(tmp.getUserObject());
+//		System.out.println(tmp.getLevel());
+//		tmp = (ABNode) tmp.getFirstChild();
+//		System.out.println(tmp.getLevel());
+//		Enumeration depth = root.breadthFirstEnumeration();
+//		ABNode enumed;
+//		while(depth.hasMoreElements()) {
+//			enumed = (ABNode)depth.nextElement();
+//			Point p = (Point) enumed.getUserObject();
+//				if (p == null) {
+//					System.out.println("null");
+//				} else {
+//					System.out.println(p.value);
+//				}
+//			
+//		}
+		System.out.println(Prune(root, new Point(Integer.MIN_VALUE, 0, 0), new Point(Integer.MAX_VALUE, 0, 0), true).value);
 		
 		
 		

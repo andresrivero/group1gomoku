@@ -423,6 +423,9 @@ public class GomokuPlayer {
 		}
 		
 	}
+	
+
+	
 	public static void main(String[] args) {
 		
 		GomokuPlayer gp = new GomokuPlayer("localhost", DEFAULTPORT);
@@ -472,7 +475,6 @@ public class GomokuPlayer {
 		            	return;
 		            }
 		            
-		           
 		            gp.scoreParse(gp.board, gp.self.charAt(0));
 		            
 //		            for (int x = 0; x < length; x++) {
