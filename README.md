@@ -14,9 +14,3 @@ to run:
 A complete repository can be found at: http://github.com/andresrivero/group1gomoku
 
 ## To Do
-
-* add scoring of table
-* clean inner classes
-* create helper methods for table parsing
-* alpha-beta search on scores of possible moves
-* refinement

@@ -1,23 +1,15 @@
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.swing.tree.*;
 
+//pruning class
+//using defaultmutabletreenode
+
 public class ABPrune {
 
-
-	class Point  {
-		int row;
-		int col;
-		int value;
-		public Point(int value, int row, int col) {
-			this.value = value;
-			this.row = row;
-			this.col = col;
-			
-		}
-	}
-	
+	public ABNode root = null;
 	class ABNode extends DefaultMutableTreeNode {
 		
 		
@@ -32,7 +24,7 @@ public class ABPrune {
 		@Override
 		public Point getUserObject() {
 			
-			return (Point)super.userObject;
+			return (Point) super.userObject;
 			
 		}
 		@Override
@@ -151,7 +143,7 @@ public class ABPrune {
 		}
 		
 		else if (minOrMax) {
-			
+			//Minimizer
 			abPoint = alpha;
 			int q = 0;
 			int childrenleft = down.getChildCount();
@@ -166,7 +158,9 @@ public class ABPrune {
 				if (beta.value <= abPoint.value) break;
 				
 			}
+			
 		} else {
+			//Maximizer
 			int q = 0;
 
 			abPoint = beta;
@@ -188,76 +182,44 @@ public class ABPrune {
 		}
 		return abPoint;
 	}
-	public ABPrune() {
-		
-		ArrayList<Point> array = new ArrayList<Point>();
-		int[] arrayi = {-16,-19,20,-19,-3,19,-4,-19,-15};
-		for (int x = 0; x < 9; x++) {
-			array.add(new Point(arrayi[x],arrayi[x], arrayi[x]));
+	
+	
+	public ABPrune(ArrayList<Point> pointList81) {
+		//long start = System.currentTimeMillis();
+		for (Point tmp : pointList81) {
+			System.out.print(tmp.value + " ");
 		}
+		System.out.println(pointList81.size());
+		root = new ABNode("root", null, true);
 		
-		ABNode root = new ABNode("root", null, true);
+		root.add(new ABNode("min1", null, true));
+		root.add(new ABNode("min2", null, true));
+		root.add(new ABNode("min3", null, true));
+		Iterator itr = pointList81.iterator();
 		
-		root.add(new ABNode("min", null, true));
-		root.add(new ABNode("min", null, true));
-		root.add(new ABNode("min", null, true));
+		Enumeration minChildren = root.children();
+		for (int x = 0; x < root.getChildCount(); x++) {
+			ABNode tmp = (ABNode)minChildren.nextElement();
+			tmp.add(new ABNode("max" + x+1, null, true));
+			
+			tmp.add(new ABNode("max" + x+1, null, true));
+			tmp.add(new ABNode("max" + x+1, null, true));
+			Enumeration maxChildren = tmp.children();
+			for (int y = 0; y < tmp.getChildCount(); y++){
+				
+				ABNode tmp2 = (ABNode)maxChildren.nextElement();
+				tmp2.add(new ABNode("leaf",  (Point)itr.next(), false));
 
-		ABNode tmp = root;
-		Enumeration children = tmp.children();
-		System.out.println(root.getChildCount());
-		
-		ABNode tmp2 = (ABNode)children.nextElement();
+				tmp2.add(new ABNode("leaf",  (Point)itr.next(), false));
 
-		System.out.println(tmp2.hashCode());
-		tmp2.add(new ABNode("leaf",  new Point(array.get(0).value, array.get(0).value, array.get(0).value), false));
-		tmp2.add(new ABNode("leaf",  new Point(array.get(1).value, array.get(1).value, array.get(1).value), false));
-		tmp2.add(new ABNode("leaf",  new Point(array.get(2).value, array.get(2).value, array.get(2).value), false));
+				tmp2.add(new ABNode("leaf",  (Point)itr.next(), false));
+			}
+			maxChildren = tmp.children();
 
-		tmp2 = (ABNode) children.nextElement();
 
-				System.out.println(tmp2.hashCode());
-			tmp2.add(new ABNode("leaf",  new Point(array.get(3).value, array.get(3).value, array.get(3).value), false));
-			tmp2.add(new ABNode("leaf",  new Point(array.get(4).value, array.get(4).value, array.get(4).value), false));
-			tmp2.add(new ABNode("leaf",  new Point(array.get(5).value, array.get(5).value, array.get(5).value), false));
 
-			 tmp2 = (ABNode) children.nextElement();
-
-				System.out.println(tmp2.hashCode());
-			tmp2.add(new ABNode("leaf",  new Point(array.get(6).value, array.get(6).value, array.get(6).value), false));
-			tmp2.add(new ABNode("leaf",  new Point(array.get(7).value, array.get(7).value, array.get(7).value), false));
-			tmp2.add(new ABNode("leaf",  new Point(array.get(8).value, array.get(8).value, array.get(8).value), false));
-
-//		System.out.println( tmp.getChildCount());
-//		
-//		System.out.println(tmp.getUserObject());
-//		System.out.println(tmp.getLevel());
-//		tmp = (ABNode) tmp.getFirstChild();
-//		System.out.println(tmp.getLevel());
-//		Enumeration depth = root.breadthFirstEnumeration();
-//		ABNode enumed;
-//		while(depth.hasMoreElements()) {
-//			enumed = (ABNode)depth.nextElement();
-//			Point p = (Point) enumed.getUserObject();
-//				if (p == null) {
-//					System.out.println("null");
-//				} else {
-//					System.out.println(p.value);
-//				}
-//			
-//		}
-		System.out.println(Prune(root, new Point(Integer.MIN_VALUE, 0, 0), new Point(Integer.MAX_VALUE, 0, 0), true).value);
-		
-		
-		
-		// TODO Auto-generated constructor stub
+		}
 	}
-	
-	public static void main (String args[]) {
-		ABPrune prune = new ABPrune();
-		
-		
-		//Point bestMove = root.Prune();
-		
-	}
-	
+
+
 }
